@@ -1,0 +1,22 @@
+{
+  "name": "@devrev-claude/utils",
+  "version": "0.1.0",
+  "description": "Common utilities for DevRev Claude skills and snap-ins",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "keywords": [
+    "devrev",
+    "utils"
+  ],
+  "author": "konchangakita",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

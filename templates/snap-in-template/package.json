@@ -1,0 +1,27 @@
+{
+  "name": "@devrev-claude/snap-in-template",
+  "version": "0.1.0",
+  "description": "Template for DevRev Snap-ins",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "deploy": "devrev snap-in deploy",
+    "test": "jest"
+  },
+  "keywords": [
+    "devrev",
+    "snap-in"
+  ],
+  "author": "konchangakita",
+  "license": "MIT",
+  "dependencies": {
+    "@devrev-claude/devrev-client": "workspace:*",
+    "@devrev-claude/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0"
+  }
+}

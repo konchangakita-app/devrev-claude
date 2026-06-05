@@ -1,0 +1,20 @@
+version: "2"
+
+name: snap-in-template
+description: Template for DevRev Snap-ins
+
+service_account:
+  display_name: Snap-in Template Service Account
+
+functions:
+  - name: example_function
+    description: Example function
+
+automations:
+  - name: example_automation
+    source: automations
+
+event_sources:
+  organization:
+    - work.created
+    - work.updated

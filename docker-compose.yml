@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  dev:
+    image: node:20-alpine
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - node_modules:/workspace/node_modules
+    ports:
+      - "8080:8080"   # 開発サーバー（ポート30xx以外）
+      - "9229:9229"   # Node.js デバッガー
+    command: sh -c "npm install && tail -f /dev/null"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=devrev:*
+    stdin_open: true
+    tty: true
+
+volumes:
+  node_modules:

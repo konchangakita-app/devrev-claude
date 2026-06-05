@@ -1,0 +1,29 @@
+{
+  "name": "@devrev-claude/skill-template",
+  "version": "0.1.0",
+  "description": "Template for DevRev Claude skills",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "keywords": [
+    "devrev",
+    "claude-code",
+    "skill"
+  ],
+  "author": "konchangakita",
+  "license": "MIT",
+  "dependencies": {
+    "@devrev-claude/devrev-client": "workspace:*",
+    "@devrev-claude/auth": "workspace:*",
+    "@devrev-claude/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "devrev-claude",
+  "version": "0.1.0",
+  "description": "DevRev platform向けのClaude Code スキル & Snap-in集",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/konchangakita/devrev-claude.git"
+  },
+  "keywords": [
+    "devrev",
+    "claude-code",
+    "snap-in",
+    "skills"
+  ],
+  "author": "konchangakita",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "skills/*",
+    "snap-ins/*",
+    "lib/*",
+    "templates/*"
+  ],
+  "scripts": {
+    "dev": "docker-compose up -d",
+    "down": "docker-compose down",
+    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "lint": "eslint \"**/*.{ts,js}\"",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}

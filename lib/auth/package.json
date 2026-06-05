@@ -1,0 +1,26 @@
+{
+  "name": "@devrev-claude/auth",
+  "version": "0.1.0",
+  "description": "DevRev authentication and PAT management",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "keywords": [
+    "devrev",
+    "auth",
+    "pat"
+  ],
+  "author": "konchangakita",
+  "license": "MIT",
+  "dependencies": {
+    "keytar": "^7.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
