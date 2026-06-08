@@ -27,11 +27,16 @@ DevRev の Web Crawler Job を管理し、外部サイトから Knowledge Base �
 
 ## Workflow
 
-### Step 1: PAT 確認
-```bash
-# devrev-pat-manager スキルで PAT を取得
-python3 "${PAT_MANAGER_SKILL}/scripts/pat_manager.py" get "<org>"
+### Step 1: Organization 確認（必須）
+**CRITICAL**: 必ず最初にどのorgで作業するかユーザーに確認する。
+
 ```
+Agent: "どのorgでクローラージョブを操作しますか？"
+User: "acme-corp"
+Agent: → pat_manager.py get "acme-corp"
+```
+
+複数orgのPATが登録されている場合、ユーザーに選択させる。
 
 ### Step 2: 目的に応じた操作
 
@@ -40,13 +45,44 @@ python3 "${PAT_MANAGER_SKILL}/scripts/pat_manager.py" get "<org>"
 python3 "${SKILL_DIR}/scripts/list_crawler_jobs.py"
 ```
 
-#### ジョブ作成
+#### ジョブ作成（確認必須項目）
+**CRITICAL**: 作成前に以下を必ずユーザーに確認する：
+
+1. **パーツID（必須）**
+   ```
+   Agent: "どのパーツに適用しますか？（例: PROD-1）"
+   User: "PROD-1"
+   ```
+
+2. **ジョブの頻度（必須確認）**
+   ```
+   Agent: "クロール頻度を選んでください：
+          0 = 1回のみ実行（デフォルト）
+          1 = 毎日実行
+          7 = 週1回実行
+          その他 = N日ごと（1-12）"
+   User: "0"（または "1回だけ"）
+   ```
+
+3. **クロール対象URL**
+   ```
+   Agent: "クロール対象のURLを教えてください（カンマ区切りで複数可、最大50件）"
+   User: "https://docs.example.com/"
+   ```
+
+4. **クロール深度（任意）**
+   ```
+   Agent: "クロール深度を指定しますか？（1-10、デフォルト: 4）"
+   User: "4"（または「デフォルトで」）
+   ```
+
+確認後に実行：
 ```bash
 python3 "${SKILL_DIR}/scripts/create_crawler_job.py" \
-  --urls "https://example.com/docs" \
-  --part "PROD-1" \
-  --frequency 0 \
-  --max-depth 4
+  --urls "<user_provided_urls>" \
+  --part "<user_provided_part>" \
+  --frequency <user_provided_frequency> \
+  --max-depth <user_provided_depth>
 ```
 
 #### ジョブ制御（pause/resume/abort）
@@ -400,21 +436,43 @@ devrev-crawler-job/
 
 ## Examples
 
-### Example 1: ドキュメントサイトを1回クロール
+### Example 1: ドキュメントサイトを1回クロール（確認プロセス付き）
 ```
-User: "https://docs.example.com/ をクロールしてKBに追加して。PROD-1に適用。"
+User: "https://docs.example.com/ をクロールしてKBに追加して"
+
+Agent: "どのorgで作業しますか？"
+User: "acme-corp"
+
+Agent: "どのパーツに適用しますか？（例: PROD-1）"
+User: "PROD-1"
+
+Agent: "クロール頻度を選んでください：
+       0 = 1回のみ実行（デフォルト）
+       1 = 毎日実行
+       7 = 週1回実行"
+User: "0"
 
 Agent:
-→ pat_manager.py get "example-org"
-→ create_crawler_job.py --urls "https://docs.example.com/" --part "PROD-1"
+→ pat_manager.py get "acme-corp"
+→ create_crawler_job.py --urls "https://docs.example.com/" --part "PROD-1" --frequency 0
 → "クローラージョブ WCJ-1 を作成しました。1回のみ実行します。"
 ```
 
-### Example 2: 毎日更新チェックする定期ジョブ
+### Example 2: 毎日更新チェックする定期ジョブ（確認プロセス付き）
 ```
-User: "https://help.example.com/ を毎日クロールして最新情報を取り込みたい。"
+User: "https://help.example.com/ を毎日クロールして最新情報を取り込みたい"
+
+Agent: "どのorgで作業しますか？"
+User: "acme-corp"
+
+Agent: "どのパーツに適用しますか？（例: PROD-1）"
+User: "PROD-1"
+
+Agent: "「毎日」とのことなので、frequency=1 で作成します。よろしいですか？"
+User: "はい"
 
 Agent:
+→ pat_manager.py get "acme-corp"
 → create_crawler_job.py --urls "https://help.example.com/" --part "PROD-1" --frequency 1
 → "クローラージョブ WCJ-2 を作成しました。毎日自動実行します。"
 ```
