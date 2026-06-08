@@ -1,0 +1,336 @@
+/**
+ * Twenty Design System - Design Tokens
+ * Based on Figma component library
+ *
+ * This file contains all CSS custom properties (design tokens) used across the design system.
+ * These tokens ensure consistency in colors, typography, spacing, and other visual properties.
+ */
+
+:root {
+  /* ========================================
+     COLOR TOKENS
+     ======================================== */
+
+  /* Primary Colors */
+  --color-primary: #1a1a1a;
+  --color-primary-hover: #333333;
+  --color-primary-pressed: #0d0d0d;
+  --color-primary-disabled: #999999;
+
+  /* Accent Colors (Blue) */
+  --color-accent: #3366ff;
+  --color-accent-hover: #1a4cff;
+  --color-accent-pressed: #0033cc;
+  --color-accent-light: #ebf0ff;
+  --color-accent-lighter: #f5f8ff;
+
+  /* Secondary Colors (Red) */
+  --color-secondary: #ef4444;
+  --color-secondary-hover: #dc2626;
+  --color-secondary-pressed: #b91c1c;
+  --color-secondary-light: #fee2e2;
+
+  /* Tertiary Colors (Gray/Default) */
+  --color-tertiary: #666666;
+  --color-tertiary-hover: #4d4d4d;
+  --color-tertiary-light: #f5f5f5;
+
+  /* Semantic Colors */
+  --color-success: #22c55e;
+  --color-success-hover: #16a34a;
+  --color-success-light: #dcfce7;
+
+  --color-warning: #f59e0b;
+  --color-warning-hover: #d97706;
+  --color-warning-light: #fef3c7;
+
+  --color-error: #ef4444;
+  --color-error-hover: #dc2626;
+  --color-error-light: #fee2e2;
+
+  --color-info: #3b82f6;
+  --color-info-hover: #2563eb;
+  --color-info-light: #dbeafe;
+
+  /* Background Colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #fafafa;
+  --color-bg-tertiary: #f5f5f5;
+  --color-bg-hover: #f0f0f0;
+  --color-bg-active: #ebebeb;
+  --color-bg-disabled: #f5f5f5;
+
+  /* Dark Mode Backgrounds */
+  --color-bg-dark-primary: #1a1a1a;
+  --color-bg-dark-secondary: #2d2d2d;
+  --color-bg-dark-tertiary: #3a3a3a;
+  --color-bg-dark-hover: #404040;
+
+  /* Text Colors */
+  --color-text-primary: #141414;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-placeholder: #b3b3b3;
+  --color-text-disabled: #cccccc;
+  --color-text-inverse: #ffffff;
+  --color-text-link: #3366ff;
+
+  /* Border Colors */
+  --color-border-primary: #e5e5e5;
+  --color-border-secondary: #f0f0f0;
+  --color-border-focus: #1a1a1a;
+  --color-border-error: #ef4444;
+  --color-border-success: #22c55e;
+
+  /* Tag/Chip Colors */
+  --color-tag-gray: #f5f5f5;
+  --color-tag-gray-text: #666666;
+  --color-tag-blue: #dbeafe;
+  --color-tag-blue-text: #1e40af;
+  --color-tag-green: #dcfce7;
+  --color-tag-green-text: #166534;
+  --color-tag-yellow: #fef3c7;
+  --color-tag-yellow-text: #92400e;
+  --color-tag-red: #fee2e2;
+  --color-tag-red-text: #991b1b;
+  --color-tag-purple: #f3e8ff;
+  --color-tag-purple-text: #6b21a8;
+  --color-tag-pink: #fce7f3;
+  --color-tag-pink-text: #9d174d;
+  --color-tag-orange: #ffedd5;
+  --color-tag-orange-text: #c2410c;
+
+  /* Avatar Colors */
+  --color-avatar-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --color-avatar-2: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --color-avatar-3: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --color-avatar-4: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  --color-avatar-5: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+  --color-avatar-6: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+
+  /* ========================================
+     TYPOGRAPHY TOKENS
+     ======================================== */
+
+  /* Font Family */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+
+  /* Font Sizes */
+  --font-size-2xs: 10px;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 28px;
+  --font-size-5xl: 32px;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.01em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-caps: 0.5px;
+
+  /* ========================================
+     SPACING TOKENS
+     ======================================== */
+
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ========================================
+     BORDER RADIUS TOKENS
+     ======================================== */
+
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* ========================================
+     SHADOW TOKENS
+     ======================================== */
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-focus: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  --shadow-focus-accent: 0 0 0 3px rgba(51, 102, 255, 0.2);
+
+  /* ========================================
+     TRANSITION TOKENS
+     ======================================== */
+
+  --duration-instant: 0ms;
+  --duration-fast: 100ms;
+  --duration-normal: 150ms;
+  --duration-slow: 200ms;
+  --duration-slower: 300ms;
+  --duration-slowest: 500ms;
+
+  --easing-default: ease;
+  --easing-linear: linear;
+  --easing-in: ease-in;
+  --easing-out: ease-out;
+  --easing-in-out: ease-in-out;
+  --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  --transition-fast: 100ms ease;
+  --transition-normal: 150ms ease;
+  --transition-slow: 200ms ease;
+  --transition-colors: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+  --transition-transform: transform 150ms ease;
+  --transition-opacity: opacity 150ms ease;
+  --transition-all: all 150ms ease;
+
+  /* ========================================
+     Z-INDEX TOKENS
+     ======================================== */
+
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+
+  /* ========================================
+     COMPONENT SPECIFIC TOKENS
+     ======================================== */
+
+  /* Navigation */
+  --nav-width: 220px;
+  --nav-width-collapsed: 64px;
+  --nav-item-height: 28px;
+  --nav-item-padding-x: 8px;
+  --nav-item-padding-y: 6px;
+  --nav-item-gap: 10px;
+  --nav-section-gap: 20px;
+
+  /* Buttons */
+  --btn-height-sm: 24px;
+  --btn-height-md: 32px;
+  --btn-height-lg: 40px;
+  --btn-padding-sm: 8px 12px;
+  --btn-padding-md: 8px 14px;
+  --btn-padding-lg: 10px 18px;
+  --btn-icon-size-sm: 14px;
+  --btn-icon-size-md: 16px;
+  --btn-icon-size-lg: 18px;
+
+  /* Inputs */
+  --input-height-sm: 28px;
+  --input-height-md: 32px;
+  --input-height-lg: 40px;
+  --input-padding-x: 12px;
+  --input-padding-y: 8px;
+
+  /* Table */
+  --table-row-height: 40px;
+  --table-header-height: 36px;
+  --table-cell-padding-x: 16px;
+  --table-cell-padding-y: 8px;
+
+  /* Avatar */
+  --avatar-size-xs: 20px;
+  --avatar-size-sm: 24px;
+  --avatar-size-md: 32px;
+  --avatar-size-lg: 40px;
+  --avatar-size-xl: 56px;
+  --avatar-size-2xl: 64px;
+
+  /* Tags/Chips */
+  --tag-height-sm: 20px;
+  --tag-height-md: 24px;
+  --tag-height-lg: 28px;
+  --tag-padding-x: 8px;
+  --tag-padding-y: 2px;
+
+  /* Toggle */
+  --toggle-width: 36px;
+  --toggle-height: 20px;
+  --toggle-knob-size: 16px;
+
+  /* Menu */
+  --menu-item-height: 32px;
+  --menu-item-padding-x: 12px;
+  --menu-padding: 8px;
+  --menu-min-width: 200px;
+  --menu-max-width: 320px;
+
+  /* Tooltip */
+  --tooltip-padding: 8px 12px;
+  --tooltip-max-width: 280px;
+
+  /* Modal */
+  --modal-padding: 24px;
+  --modal-width-sm: 400px;
+  --modal-width-md: 560px;
+  --modal-width-lg: 720px;
+  --modal-width-xl: 960px;
+}
+
+/* Dark Mode Variables Override */
+[data-theme="dark"] {
+  --color-bg-primary: var(--color-bg-dark-primary);
+  --color-bg-secondary: var(--color-bg-dark-secondary);
+  --color-bg-tertiary: var(--color-bg-dark-tertiary);
+  --color-bg-hover: var(--color-bg-dark-hover);
+  --color-bg-active: #4d4d4d;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0a0;
+  --color-text-tertiary: #666666;
+  --color-text-placeholder: #555555;
+
+  --color-border-primary: #404040;
+  --color-border-secondary: #333333;
+  --color-border-focus: #ffffff;
+
+  --shadow-focus: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}

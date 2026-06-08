@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevRev — PAT Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/components/design-tokens.css">
+    <link rel="stylesheet" href="/components/components.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            min-height: 100vh;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+        .header-logo {
+            color: var(--color-text-primary);
+        }
+        .header-logo svg {
+            height: 32px;
+            width: auto;
+            display: block;
+        }
+        .header h1 {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+        .header p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Timer bar */
+        .timer-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border-primary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-6);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+        }
+        .timer-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            white-space: nowrap;
+        }
+        .timer-icon {
+            font-size: var(--font-size-sm);
+        }
+        .timer-track {
+            flex: 1;
+            height: 4px;
+            background: var(--color-bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            min-width: 80px;
+        }
+        .timer-fill {
+            height: 100%;
+            background: var(--color-accent);
+            border-radius: var(--radius-full);
+            width: 100%;
+            transition: width 1s linear, background-color 0.5s ease;
+        }
+        .timer-fill.warning {
+            background: var(--color-warning);
+        }
+        .timer-fill.danger {
+            background: var(--color-error);
+        }
+        .timer-bar.expired {
+            border-color: var(--color-error);
+            background: color-mix(in srgb, var(--color-error) 8%, var(--color-bg-secondary));
+        }
+
+        /* Expired overlay */
+        .expired-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .expired-overlay.show {
+            display: flex;
+        }
+        .expired-dialog {
+            background: var(--color-bg-primary);
+            border: 1px solid var(--color-border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-8);
+            text-align: center;
+            max-width: 400px;
+        }
+        .expired-dialog h2 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+        .expired-dialog p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        /* Section titles */
+        .section-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-3);
+        }
+
+        /* PAT list table */
+        .pat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--space-2);
+        }
+        .pat-table th {
+            text-align: left;
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--color-border-primary);
+        }
+        .pat-table td {
+            padding: var(--space-3);
+            font-size: var(--font-size-sm);
+            border-bottom: 1px solid var(--color-border-primary);
+            vertical-align: middle;
+        }
+        .pat-table tr:last-child td {
+            border-bottom: none;
+        }
+        .pat-table tr:hover td {
+            background-color: var(--color-bg-secondary);
+        }
+
+        .org-name {
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+        .org-detail {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-tertiary);
+            margin-top: 2px;
+        }
+        .masked-token {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+            background: var(--color-bg-tertiary);
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+        }
+        .expires-text {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+        }
+
+        /* Action buttons in table */
+        .actions {
+            display: flex;
+            gap: var(--space-1);
+            justify-content: flex-end;
+        }
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: var(--color-text-tertiary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.15s ease;
+        }
+        .btn-icon:hover {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+        }
+        .btn-icon.danger:hover {
+            background: var(--color-bg-error);
+            color: var(--color-error);
+        }
+
+        /* Add new PAT section */
+        .add-section {
+            margin-top: var(--space-6);
+        }
+        .add-form {
+            display: flex;
+            gap: var(--space-3);
+            align-items: flex-start;
+        }
+        .add-form textarea {
+            flex: 1;
+            min-height: 44px;
+            max-height: 120px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: var(--font-size-xs);
+            padding: var(--space-3);
+            border: 1px solid var(--color-border-primary);
+            border-radius: var(--radius-md);
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .add-form textarea:focus {
+            border-color: var(--color-accent);
+        }
+        .add-form textarea::placeholder {
+            color: var(--color-text-tertiary);
+        }
+
+        /* Update row — inline edit */
+        .update-row {
+            display: none;
+        }
+        .update-row.active {
+            display: table-row;
+        }
+        .update-row td {
+            padding: var(--space-2) var(--space-3);
+            background: var(--color-bg-secondary);
+        }
+        .update-input-wrap {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+        }
+        .update-input-wrap textarea {
+            flex: 1;
+            min-height: 38px;
+            max-height: 80px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: var(--font-size-xs);
+            padding: var(--space-2);
+            border: 1px solid var(--color-border-primary);
+            border-radius: var(--radius-sm);
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            outline: none;
+        }
+        .update-input-wrap textarea:focus {
+            border-color: var(--color-accent);
+        }
+
+        /* Status banners — dark mode fixes */
+        .banner-success {
+            color: #166534;
+        }
+        .banner-info {
+            color: #1e40af;
+        }
+        .banner-error {
+            color: #991b1b;
+        }
+        [data-theme="dark"] .banner-success {
+            background-color: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+        [data-theme="dark"] .banner-info {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+        [data-theme="dark"] .banner-error {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        [data-theme="dark"] .banner-success .btn-icon,
+        [data-theme="dark"] .banner-info .btn-icon,
+        [data-theme="dark"] .banner-error .btn-icon {
+            color: inherit;
+        }
+
+        /* Status banners */
+        .status-banner {
+            margin-top: var(--space-4);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8) var(--space-4);
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Confirm dialog */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-overlay.active {
+            display: flex;
+        }
+        .confirm-dialog {
+            background: var(--color-bg-primary);
+            border: 1px solid var(--color-border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .confirm-dialog h3 {
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+        .confirm-dialog p {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-5);
+        }
+        .confirm-actions {
+            display: flex;
+            gap: var(--space-2);
+            justify-content: flex-end;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--color-border-primary);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-logo">
+                <svg viewBox="0 0 416 75" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M398.84 59.5238H389.708V11.9943H398.84V26.1685C400.723 16.0653 404.824 11.9943 412.907 11.9943H416V21.9782H411.583C402.53 21.9782 398.84 25.5844 398.84 34.4179V59.5238Z" fill="currentColor"></path><path d="M320.68 61.0183C317.384 61.0183 314.582 60.0706 312.329 58.1871C309.635 55.934 307.811 52.3338 307.042 47.762L302.781 22.3938L295.819 23.5621L294.496 15.7001L298.567 15.0147C299.335 14.8835 300.015 14.4603 300.468 13.8285C300.921 13.1907 301.1 12.4159 300.969 11.647L299.27 1.5259L308.342 0L309.462 6.652C309.927 9.43558 308.664 11.3549 307.525 12.4755C306.911 13.0775 306.274 13.5126 305.785 13.8047L325.562 10.4846L326.885 18.3466L311.858 20.8739L315.918 45.0321C316.365 47.7084 317.223 49.5323 318.528 50.6112C319.899 51.7437 321.801 52.0834 324.346 51.6543C326.95 51.2192 329.019 50.3072 331.266 49.2522L331.421 49.1806L333.978 57.3466L333.865 57.4062C330.604 59.0573 328.184 60.0289 324.006 60.7262C322.85 60.9229 321.747 61.0183 320.692 61.0183H320.68Z" fill="currentColor"></path><path d="M203.217 74.7089H194.008V11.9918H203.217V25.4806C205.482 15.5562 211.496 10.5195 221.086 10.5195C233.675 10.5195 240.893 19.6809 240.893 35.6493C240.893 51.6177 233.526 61.089 221.188 61.089C211.335 61.089 205.285 56.0046 203.217 45.973V74.7089ZM217.808 18.912C208.671 18.912 203.217 25.0574 203.217 35.3453V36.0606C203.217 46.2293 208.945 52.8038 217.808 52.8038C226.671 52.8038 231.786 46.7121 231.786 35.6493C231.786 24.5865 227.083 18.9061 217.808 18.9061V18.912Z" fill="currentColor"></path><path d="M185.895 59.5231H176.764V31.1269C176.764 26.5194 175.303 18.7885 165.54 18.7885C157.493 18.7885 152.689 23.402 152.689 31.1269V59.5231H143.558V31.1269C143.558 26.5194 142.098 18.7885 132.334 18.7885C124.288 18.7885 119.484 23.402 119.484 31.1269V59.5231H110.352V11.9995H119.484V23.7477C121.599 15.0513 127.292 10.4676 135.988 10.4676C145.62 10.4676 151.306 15.5222 152.445 25.0889C154.12 15.248 159.532 10.4676 168.985 10.4676C176.698 10.4676 185.889 13.6625 185.889 28.8917V59.5231H185.895Z" fill="currentColor"></path><path d="M82.6599 60.9526C79.1015 61.4056 75.2271 61.0182 71.1561 59.7247C64.0691 57.4776 58.8895 53.3708 56.1775 47.8513C53.4893 42.3676 53.2867 35.6202 55.5934 28.3304C57.8822 21.1062 62.0068 15.7715 67.5322 12.8926C72.9443 10.0732 79.4353 9.73348 86.3017 11.9091C100.267 16.3318 106.335 28.5152 101.763 42.9517C98.4134 53.5258 91.4933 59.8261 82.6599 60.9526ZM76.6517 19.1631C71.0012 19.8784 66.5368 24.0269 64.3314 30.9889C61.1366 41.0861 64.5996 48.811 73.6059 51.6661C78.0584 53.0787 82.2188 52.7151 85.6401 50.617C88.978 48.5725 91.5529 44.9366 93.0907 40.0966C96.1425 30.4524 92.5364 22.7156 83.6672 19.9082C81.1936 19.1273 78.8392 18.8889 76.6577 19.1691L76.6517 19.1631Z" fill="currentColor"></path><path d="M257.713 42.3204H249.613L247.998 11.999H258.417L257.719 42.3204H257.713Z" fill="currentColor"></path><path d="M277.222 11.999H287.641L286.026 42.3204H277.925L277.228 11.999H277.222Z" fill="currentColor"></path><path d="M38.2364 42.3136C36.5556 47.5112 33.5217 52.5955 24.873 52.5955C20.2 52.5955 16.3078 51.0696 13.6137 48.1847C10.8778 45.2581 9.4354 40.9844 9.4354 35.8285C9.4354 30.3567 10.854 26.0948 13.6495 23.1503C16.2602 20.4025 20.0331 18.9541 24.5631 18.9541C31.7633 18.9541 36.2814 22.441 38.3735 29.6056L38.4033 29.7129H47.7136L47.6838 29.5341C45.3771 16.6891 37.849 10.4424 24.6644 10.4424C9.68574 10.4424 0 20.3667 0 35.7212C0 43.5593 2.36629 50.0444 6.83665 54.4791C11.2057 58.8124 17.4761 61.1012 24.9684 61.1012C37.545 61.1012 45.1565 54.7533 47.6242 42.3136H38.2245H38.2364Z" fill="currentColor"></path><path d="M359.953 10.3964C352.658 10.3964 346.512 12.7628 342.167 17.2332C337.744 21.7871 335.408 28.3377 335.408 36.1759C335.408 51.572 344.855 61.1328 360.06 61.1328C371.439 61.1328 379.045 55.81 381.828 45.8856H372.643C370.378 50.6839 366.265 53.0085 360.06 53.0085C351.066 53.0085 345.648 47.9063 344.784 38.7389H381.918L381.929 38.6614C382.084 36.3189 382.138 34.5248 382.138 32.8856C382.138 19.0154 373.638 10.3964 359.959 10.3964H359.953ZM359.643 18.4193C368.083 18.4193 372.726 22.699 373.46 31.2346H344.927C346.22 22.8182 351.299 18.4193 359.643 18.4193Z" fill="currentColor"></path></svg>
+            </div>
+            <div>
+                <h1>PAT Manager</h1>
+                <p>Manage your DevRev Personal Access Tokens locally and securely.</p>
+            </div>
+        </div>
+
+        <!-- Countdown timer -->
+        <div class="timer-bar" id="timerBar">
+            <div class="timer-info">
+                <span class="timer-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                <span id="timerText">Session active — auto-closes in <strong id="timerCountdown">2:00</strong></span>
+            </div>
+            <div class="timer-track">
+                <div class="timer-fill" id="timerFill"></div>
+            </div>
+        </div>
+
+        <!-- Status banner area -->
+        <div id="statusArea"></div>
+
+        <!-- Stored PATs -->
+        <div class="section-title">Stored Tokens</div>
+        <div class="card">
+            <div id="patListWrap">
+                <div class="empty-state"><span class="spinner"></span>&nbsp; Loading...</div>
+            </div>
+        </div>
+
+        <!-- Add New PAT -->
+        <div class="add-section">
+            <div class="section-title">Add New Token</div>
+            <div class="card card-body">
+                <div class="add-form">
+                    <textarea id="newPatInput" class="textarea" placeholder="Paste your PAT here (eyJhbG...)" rows="2"></textarea>
+                    <button id="addBtn" class="btn btn-accent" onclick="addPat()">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expired Overlay -->
+    <div class="expired-overlay" id="expiredOverlay">
+        <div class="expired-dialog">
+            <h2>Session Expired</h2>
+            <p>The PAT Manager session has ended. Your changes were already processed automatically. Ask Computer to relaunch if you need to make more changes.</p>
+            <button class="btn btn-accent" onclick="window.close()">Close Tab</button>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Dialog -->
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-dialog">
+            <h3>Remove Token</h3>
+            <p id="confirmText">Are you sure you want to remove this PAT?</p>
+            <div class="confirm-actions">
+                <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Theme: match system preference ──
+        function applyTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        }
+        applyTheme();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+
+        // ── Countdown Timer (max-duration based, not idle) ──
+        let timerTotal = 120; // 2 min default, will sync from server
+        let timerRemaining = 120;
+        let timerInterval = null;
+
+        async function syncTimer() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                if (data.timeout_seconds) timerTotal = data.timeout_seconds;
+                if (typeof data.seconds_remaining === 'number') {
+                    timerRemaining = Math.max(0, Math.round(data.seconds_remaining));
+                }
+            } catch (e) {
+                // Server is gone
+                timerRemaining = 0;
+                showExpired();
+            }
+        }
+
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60);
+            const s = secs % 60;
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerUI() {
+            const countdown = document.getElementById('timerCountdown');
+            const fill = document.getElementById('timerFill');
+            const bar = document.getElementById('timerBar');
+            const text = document.getElementById('timerText');
+
+            countdown.textContent = formatTime(timerRemaining);
+            const pct = timerTotal > 0 ? (timerRemaining / timerTotal) * 100 : 0;
+            fill.style.width = pct + '%';
+
+            // Color transitions
+            fill.classList.remove('warning', 'danger');
+            if (pct <= 10) {
+                fill.classList.add('danger');
+            } else if (pct <= 30) {
+                fill.classList.add('warning');
+            }
+
+            if (timerRemaining <= 0) {
+                bar.classList.add('expired');
+                text.innerHTML = '<strong>Session expired</strong> — server has shut down';
+                showExpired();
+            }
+        }
+
+        function showExpired() {
+            clearInterval(timerInterval);
+            clearInterval(heartbeatInterval);
+            document.getElementById('expiredOverlay').classList.add('show');
+        }
+
+        function startTimer() {
+            // Sync with server first, then tick locally
+            syncTimer().then(() => {
+                updateTimerUI();
+                timerInterval = setInterval(() => {
+                    timerRemaining = Math.max(0, timerRemaining - 1);
+                    updateTimerUI();
+                    // Re-sync with server every 30s to stay accurate
+                    if (timerRemaining % 30 === 0 && timerRemaining > 0) {
+                        syncTimer();
+                    }
+                }, 1000);
+            });
+        }
+
+        startTimer();
+
+        // ── Heartbeat: prove the window is still open ──
+        let heartbeatInterval = setInterval(() => {
+            fetch('/api/heartbeat').catch(() => {});
+        }, 5000);
+        // Send initial heartbeat immediately
+        fetch('/api/heartbeat').catch(() => {});
+
+        // ── Window close: signal the server to shut down ──
+        window.addEventListener('beforeunload', () => {
+            // Use sendBeacon for reliable delivery during page unload
+            navigator.sendBeacon('/api/window-closed', '{}');
+        });
+        // Also handle visibilitychange as a backup for some browsers
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                // Page might be closing — send beacon just in case
+                // The server will also detect heartbeat loss as a fallback
+            }
+        });
+
+        // ── State ──
+        let pats = [];
+        let pendingDeleteSlug = null;
+
+        // ── Load PATs ──
+        async function loadPats() {
+            try {
+                const res = await fetch('/api/pats');
+                pats = await res.json();
+                if (Array.isArray(pats)) {
+                    renderPats();
+                } else {
+                    document.getElementById('patListWrap').innerHTML =
+                        '<div class="empty-state">Could not load tokens.</div>';
+                }
+            } catch (e) {
+                document.getElementById('patListWrap').innerHTML =
+                    '<div class="empty-state">Could not connect to server.</div>';
+            }
+        }
+
+        // ── Render PATs table ──
+        function renderPats() {
+            const wrap = document.getElementById('patListWrap');
+            if (!pats.length) {
+                wrap.innerHTML = '<div class="empty-state">No tokens stored yet. Add one below.</div>';
+                return;
+            }
+
+            let html = `<table class="pat-table">
+                <thead><tr>
+                    <th>Organization</th>
+                    <th>Token</th>
+                    <th>Expires</th>
+                    <th style="text-align:right">Actions</th>
+                </tr></thead><tbody>`;
+
+            for (const pat of pats) {
+                const expDate = pat.expires ? new Date(pat.expires).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+                const isExpired = pat.expired;
+                const orgDisplay = pat.org_display_name || pat.org_slug || pat.key;
+                const user = pat.user || '';
+                const devId = pat.dev_id || '';
+                const masked = pat.masked_token || '••••••••';
+
+                html += `<tr id="row-${pat.key}">
+                    <td>
+                        <div class="org-name">${esc(orgDisplay)}</div>
+                        <div class="org-detail">${esc(user)}${devId ? ' · ' + esc(devId) : ''}</div>
+                    </td>
+                    <td><code class="masked-token">${esc(masked)}</code></td>
+                    <td>
+                        <span class="expires-text ${isExpired ? 'tag tag-red' : ''}">${isExpired ? 'Expired' : expDate}</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn-icon" title="Update" onclick="showUpdate('${pat.key}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+                            <button class="btn-icon danger" title="Remove" onclick="showConfirm('${pat.key}', '${esc(orgDisplay)}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="update-row" id="update-${pat.key}">
+                    <td colspan="4">
+                        <div class="update-input-wrap">
+                            <textarea id="update-input-${pat.key}" class="textarea" placeholder="Paste new PAT for ${esc(orgDisplay)}" rows="1"></textarea>
+                            <button class="btn btn-accent btn-sm" onclick="updatePat('${pat.key}')">Save</button>
+                            <button class="btn btn-secondary btn-sm" onclick="hideUpdate('${pat.key}')">Cancel</button>
+                        </div>
+                    </td>
+                </tr>`;
+            }
+
+            html += '</tbody></table>';
+
+            // Security: Use DOMParser to safely parse HTML with escaped values
+            // This prevents XSS while maintaining performance for large lists
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const table = doc.querySelector('table');
+
+            wrap.innerHTML = '';
+            if (table) {
+                wrap.appendChild(table);
+            }
+        }
+
+        // ── Add PAT ──
+        async function addPat() {
+            const input = document.getElementById('newPatInput');
+            const token = input.value.trim();
+            if (!token) return;
+
+            const btn = document.getElementById('addBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+
+            try {
+                const res = await fetch('/api/pat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    showStatus('error', data.error);
+                } else {
+                    input.value = '';
+                    showStatus('success',
+                        `<strong>${data.org_display_name || data.org_slug}</strong> — PAT stored successfully` +
+                        (data.email ? ` (${data.email})` : '') + `.`
+                    );
+                    // Reload list
+                    await loadPats();
+                }
+            } catch (e) {
+                showStatus('error', 'Failed to connect to server.');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Add';
+        }
+
+        // ── Update PAT ──
+        function showUpdate(key) {
+            // Hide all other update rows
+            document.querySelectorAll('.update-row').forEach(r => r.classList.remove('active'));
+            document.getElementById(`update-${key}`).classList.add('active');
+            document.getElementById(`update-input-${key}`).focus();
+        }
+
+        function hideUpdate(key) {
+            document.getElementById(`update-${key}`).classList.remove('active');
+            document.getElementById(`update-input-${key}`).value = '';
+        }
+
+        async function updatePat(key) {
+            const input = document.getElementById(`update-input-${key}`);
+            const token = input.value.trim();
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/pat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    showStatus('error', data.error);
+                } else {
+                    hideUpdate(key);
+                    showStatus('success',
+                        `<strong>${data.org_display_name || data.org_slug}</strong> — token updated & stored.`
+                    );
+                    await loadPats();
+                }
+            } catch (e) {
+                showStatus('error', 'Failed to connect to server.');
+            }
+        }
+
+        // ── Delete PAT ──
+        function showConfirm(slug, name) {
+            pendingDeleteSlug = slug;
+            document.getElementById('confirmText').textContent =
+                `Remove the PAT for "${name}"? This cannot be undone.`;
+            document.getElementById('confirmOverlay').classList.add('active');
+        }
+
+        function closeConfirm() {
+            pendingDeleteSlug = null;
+            document.getElementById('confirmOverlay').classList.remove('active');
+        }
+
+        async function confirmDelete() {
+            if (!pendingDeleteSlug) return;
+            const slug = pendingDeleteSlug;
+            closeConfirm();
+
+            try {
+                const res = await fetch(`/api/pat/${encodeURIComponent(slug)}`, { method: 'DELETE' });
+                const data = await res.json();
+
+                if (data.removed) {
+                    showStatus('info', `Token for <strong>${slug}</strong> removed.`);
+                    await loadPats();
+                } else {
+                    showStatus('error', data.error || 'Failed to remove.');
+                }
+            } catch (e) {
+                showStatus('error', 'Failed to connect to server.');
+            }
+        }
+
+        // ── Status banners ──
+        function showStatus(type, message) {
+            const area = document.getElementById('statusArea');
+            const cls = type === 'error' ? 'banner-error' : type === 'success' ? 'banner-success' : 'banner-info';
+
+            // Create elements safely without innerHTML for user data
+            const banner = document.createElement('div');
+            banner.className = `banner ${cls}`;
+            banner.style.marginBottom = 'var(--space-4)';
+
+            const span = document.createElement('span');
+            span.textContent = message; // Use textContent to prevent XSS
+
+            const btn = document.createElement('button');
+            btn.className = 'btn-icon';
+            btn.style.marginLeft = 'auto';
+            btn.onclick = () => btn.parentElement.remove();
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+            banner.appendChild(span);
+            banner.appendChild(btn);
+            area.innerHTML = '';
+            area.appendChild(banner);
+
+            // Auto-dismiss after 10s
+            setTimeout(() => { if (area.firstChild) area.firstChild.remove(); }, 10000);
+        }
+
+        // ── Helpers ──
+        function esc(str) {
+            const el = document.createElement('span');
+            el.textContent = str || '';
+            return el.innerHTML;
+        }
+
+        // ── Keyboard shortcuts ──
+        document.getElementById('newPatInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addPat();
+            }
+        });
+
+        // ── Init ──
+        loadPats();
+    </script>
+</body>
+</html>

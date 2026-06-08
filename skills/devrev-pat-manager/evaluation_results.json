@@ -1,0 +1,335 @@
+{
+  "skill": "pat-manager",
+  "path": "../../pat-manager",
+  "timestamp": "2026-03-31T23:09:42.047610",
+  "overall_status": "READY",
+  "validations": {
+    "metadata": {
+      "status": "passed",
+      "checks": {
+        "frontmatter": {
+          "status": "passed",
+          "message": "Frontmatter complete with name, version, description"
+        },
+        "sections": {
+          "status": "passed",
+          "message": "All 5 required sections present"
+        },
+        "examples": {
+          "status": "passed",
+          "message": "Found 6 example sections with 18 code blocks"
+        }
+      }
+    },
+    "python": [
+      {
+        "script": "pat_entry_server.py",
+        "path": "../../pat-manager/scripts/pat_entry_server.py",
+        "checks": {
+          "version_compatibility": {
+            "status": "warning",
+            "severity": "low",
+            "message": "No Python version check found. Consider adding: if sys.version_info < (3, 8): raise RuntimeError('Python 3.8+ required')"
+          },
+          "imports": {
+            "status": "passed",
+            "message": "Non-stdlib imports have graceful error handling: event_log"
+          },
+          "error_handling": {
+            "status": "passed",
+            "message": "Proper error handling with JSON format"
+          },
+          "credentials": {
+            "status": "passed",
+            "message": "No hardcoded credentials detected"
+          },
+          "env_vars": {
+            "status": "passed",
+            "message": "No credential handling detected"
+          },
+          "docstrings": {
+            "status": "warning",
+            "severity": "medium",
+            "message": "Only 29% of functions have docstrings (4/14)",
+            "fix": "Add docstrings to all functions describing purpose, args, returns, raises"
+          },
+          "complexity": {
+            "status": "warning",
+            "severity": "medium",
+            "message": "Found 2 functions with high complexity (>10)",
+            "details": [
+              {
+                "function": "main",
+                "complexity": 14
+              },
+              {
+                "function": "do_GET",
+                "complexity": 14
+              }
+            ],
+            "fix": "Consider refactoring complex functions into smaller, simpler ones"
+          }
+        },
+        "status": "passed",
+        "issues": []
+      },
+      {
+        "script": "event_log.py",
+        "path": "../../pat-manager/scripts/event_log.py",
+        "checks": {
+          "version_compatibility": {
+            "status": "warning",
+            "severity": "low",
+            "message": "No Python version check found. Consider adding: if sys.version_info < (3, 8): raise RuntimeError('Python 3.8+ required')"
+          },
+          "imports": {
+            "status": "passed",
+            "message": "All imports are from standard library"
+          },
+          "error_handling": {
+            "status": "warning",
+            "severity": "low",
+            "message": "Error handling found but no JSON error format detected. Consider: {'error': True, 'message': '...'}"
+          },
+          "credentials": {
+            "status": "passed",
+            "message": "No hardcoded credentials detected"
+          },
+          "env_vars": {
+            "status": "passed",
+            "message": "No credential handling detected"
+          },
+          "docstrings": {
+            "status": "warning",
+            "severity": "low",
+            "message": "71% of functions documented (5/7)"
+          },
+          "complexity": {
+            "status": "warning",
+            "severity": "medium",
+            "message": "Found 2 functions with high complexity (>10)",
+            "details": [
+              {
+                "function": "read_events",
+                "complexity": 11
+              },
+              {
+                "function": "tail",
+                "complexity": 13
+              }
+            ],
+            "fix": "Consider refactoring complex functions into smaller, simpler ones"
+          }
+        },
+        "status": "passed",
+        "issues": []
+      },
+      {
+        "script": "pat_manager.py",
+        "path": "../../pat-manager/scripts/pat_manager.py",
+        "checks": {
+          "version_compatibility": {
+            "status": "warning",
+            "severity": "low",
+            "message": "No Python version check found. Consider adding: if sys.version_info < (3, 8): raise RuntimeError('Python 3.8+ required')"
+          },
+          "imports": {
+            "status": "passed",
+            "message": "All imports are from standard library"
+          },
+          "error_handling": {
+            "status": "passed",
+            "message": "Proper error handling with JSON format"
+          },
+          "credentials": {
+            "status": "passed",
+            "message": "No hardcoded credentials detected"
+          },
+          "env_vars": {
+            "status": "passed",
+            "message": "No credential handling detected"
+          },
+          "docstrings": {
+            "status": "warning",
+            "severity": "low",
+            "message": "80% of functions documented (16/20)"
+          },
+          "complexity": {
+            "status": "warning",
+            "severity": "medium",
+            "message": "Found 1 functions with high complexity (>10)",
+            "details": [
+              {
+                "function": "main",
+                "complexity": 18
+              }
+            ],
+            "fix": "Consider refactoring complex functions into smaller, simpler ones"
+          }
+        },
+        "status": "passed",
+        "issues": []
+      }
+    ],
+    "ui": [
+      {
+        "file": "pat-entry.html",
+        "path": "../../pat-manager/templates/pat-entry.html",
+        "checks": {
+          "design_tokens": {
+            "status": "warning",
+            "severity": "medium",
+            "message": "6 hardcoded colors found (use var(--color-*)); 13 hardcoded pixel values (use var(--space-*))",
+            "fix": "Use design tokens: var(--color-primary), var(--space-4), etc.",
+            "token_usage": 75
+          },
+          "computer_shell": {
+            "status": "warning",
+            "severity": "low",
+            "message": "No Computer Shell integration found",
+            "fix": "Add: window.COMPUTER_APP = { name: 'Skill Name', id: 'skill-id' };"
+          },
+          "body_layout": {
+            "status": "passed",
+            "message": "Body layout appears to use flex"
+          },
+          "external_resources": {
+            "status": "passed",
+            "message": "No external CDN dependencies (self-contained)"
+          },
+          "accessibility": {
+            "status": "warning",
+            "severity": "low",
+            "message": "No semantic HTML tags found (main, nav, header, footer)",
+            "fix": "Add alt text to images, use semantic HTML, label all inputs"
+          }
+        },
+        "status": "passed",
+        "issues": []
+      }
+    ],
+    "security": {
+      "total_issues": 0,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "findings": [],
+      "status": "PASSED"
+    },
+    "versioning": {
+      "status": "passed",
+      "checks": {
+        "semver_format": {
+          "status": "passed",
+          "message": "Version 1.0.0 follows semantic versioning format"
+        },
+        "changelog": {
+          "status": "passed",
+          "message": "Changelog section found with current version documented"
+        }
+      },
+      "current_version": "1.0.0",
+      "published_version": null,
+      "issues": []
+    },
+    "cross_validation": [],
+    "test_cases": [
+      {
+        "name": "Doc example: Example 2",
+        "source": "documentation",
+        "type": "example",
+        "command": "# Tail the event log to see PAT operations as they happen\npython3 \"${SKILL_DIR}/scripts/event_log.py\" --tail --source pat_manager\n\n# In another terminal, add a PAT via the web dashboard\npython3 \"${SKILL_DIR}/scripts/pat_entry_server.py\"\n\n# The first terminal will show:\n# {\"source\": \"pat_manager\", \"type\": \"server_started\", \"timestamp\": 1709251200, ...}\n# {\"source\": \"pat_manager\", \"type\": \"pat_added\", \"org_slug\": \"acme-corp\", ...}\n# {\"source\": \"pat_manager\", \"type\": \"window_closed\", \"timestamp\": 1709251250}",
+        "description": "```bash\n# Tail the event log to see PAT operations as they happen\npython3 \"${SKILL_DIR}/scripts/even"
+      },
+      {
+        "name": "Doc example: Example 3",
+        "source": "documentation",
+        "type": "example",
+        "command": "# Show last 10 events from PAT Manager\npython3 \"${SKILL_DIR}/scripts/event_log.py\" --source pat_manager --last 10\n\n# Show events since a specific timestamp (Unix time)\npython3 \"${SKILL_DIR}/scripts/event_log.py\" --source pat_manager --since 1709251200\n\n# Export all PAT Manager events as JSON\npython3 \"${SKILL_DIR}/scripts/event_log.py\" --source pat_manager --json",
+        "description": "```bash\n# Show last 10 events from PAT Manager\npython3 \"${SKILL_DIR}/scripts/event_log.py\" --source"
+      },
+      {
+        "name": "Doc example: Example 4",
+        "source": "documentation",
+        "type": "example",
+        "command": "User: \"Create a CX agent on https://app.devrev.ai/acme-corp/computer/settings/agent-studio\"\n\nAgent thinks: I need a PAT for acme-corp. Let me check the vault.\n\u2192 python3 pat_manager.py get \"https://app.devrev.ai/acme-corp/...\"\n\u2192 Not found.\n\nAgent says: \"I don't have credentials for acme-corp. Could you share a PAT? \n             Generate one at Settings \u2192 Account \u2192 Tokens in DevRev.\"\n\nUser: \"eyJhbGciOiJS...\"\n\nAgent: \u2192 python3 pat_manager.py store \"eyJhbGciOiJS...\"\n       \u2192 \"This PAT is for Acme Corp (acme-corp), user: john@acme.com, role: admin. \n          Expires 2026-12-01. Stored securely. \u2705\"\n       \u2192 Proceeds to create the agent using the stored PAT.",
+        "description": "```\nUser: \"Create a CX agent on https://app.devrev.ai/acme-corp/computer/settings/agent-studio\"\n\nAge"
+      },
+      {
+        "name": "Doc example: Example 5",
+        "source": "documentation",
+        "type": "example",
+        "command": "User: \"List my stored orgs\"\n\nAgent: \u2192 python3 pat_manager.py list\n       \u2192 \"You have PATs for:\n          1. acme-corp (Acme Corp) \u2014 expires 2026-12-01 \u2705\n          2. beta-testing (Beta Testing Inc) \u2014 expires 2026-03-01 \u26a0\ufe0f expiring soon\n          3. old-project (Old Project) \u2014 EXPIRED \u274c\"",
+        "description": "```\nUser: \"List my stored orgs\"\n\nAgent: \u2192 python3 pat_manager.py list\n       \u2192 \"You have PATs for:"
+      },
+      {
+        "name": "Doc example: Example 6",
+        "source": "documentation",
+        "type": "example",
+        "command": "User: \"Here's my PAT for the new org: eyJhbGciOiJS...\"\n\nAgent: \u2192 python3 pat_manager.py store \"eyJhbGciOiJS...\"\n       \u2192 Validates and reflects back org info for confirmation\n       \u2192 \"Stored! What would you like me to do on this org?\"",
+        "description": "```\nUser: \"Here's my PAT for the new org: eyJhbGciOiJS...\"\n\nAgent: \u2192 python3 pat_manager.py store \"e"
+      },
+      {
+        "name": "Test parameter: --tail",
+        "source": "code_analysis",
+        "type": "parameter",
+        "parameter": "--tail"
+      },
+      {
+        "name": "Test parameter: --since",
+        "source": "code_analysis",
+        "type": "parameter",
+        "parameter": "--since"
+      },
+      {
+        "name": "Test parameter: --last",
+        "source": "code_analysis",
+        "type": "parameter",
+        "parameter": "--last"
+      },
+      {
+        "name": "Test parameter: --source",
+        "source": "code_analysis",
+        "type": "parameter",
+        "parameter": "--source"
+      },
+      {
+        "name": "Test parameter: --json",
+        "source": "code_analysis",
+        "type": "parameter",
+        "parameter": "--json"
+      },
+      {
+        "name": "Test parameter: --clear",
+        "source": "code_analysis",
+        "type": "parameter",
+        "parameter": "--clear"
+      },
+      {
+        "name": "Error handling: Exception",
+        "source": "code_analysis",
+        "type": "error_condition",
+        "error": "Exception"
+      },
+      {
+        "name": "Error handling: FileNotFoundError",
+        "source": "code_analysis",
+        "type": "error_condition",
+        "error": "FileNotFoundError"
+      },
+      {
+        "name": "Error handling: KeyboardInterrupt",
+        "source": "code_analysis",
+        "type": "error_condition",
+        "error": "KeyboardInterrupt"
+      },
+      {
+        "name": "Error handling: ImportError",
+        "source": "code_analysis",
+        "type": "error_condition",
+        "error": "ImportError"
+      }
+    ]
+  }
+}
