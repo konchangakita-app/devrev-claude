@@ -41,8 +41,24 @@ From the user's request, extract the org identifier. This can be:
 ```bash
 python3 "${SKILL_DIR}/scripts/pat_manager.py" get "<org_identifier_or_url>"
 ```
-- If found → use the returned `token` for API calls
-- If not found → go to Step 3
+
+The `get` command now performs:
+1. **Expiry check** - Verifies token hasn't expired
+2. **API validation** - Tests actual connectivity if token appears expired
+3. **Warning for near-expiry** - Alerts if token expires within 7 days
+
+Response includes:
+- `found`: boolean
+- `token`: the decrypted PAT (if found and valid)
+- `expired`: boolean (true if token is expired)
+- `error`: error message (if expired or invalid)
+- `warning`: warning message (if expiring soon)
+
+**Actions based on response:**
+- If `found` = true AND `expired` = false → use the token
+- If `expired` = true → inform user and go to Step 3 (get new PAT)
+- If `warning` exists → inform user token is expiring soon
+- If `found` = false → go to Step 3
 
 ### Step 3: Open the PAT Manager Web Dashboard (PREFERRED)
 **NEVER ask users to paste PATs in chat.** Always use the secure web form:

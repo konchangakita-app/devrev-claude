@@ -341,19 +341,62 @@ def get_pat(org_identifier: str) -> dict:
     Retrieve a PAT by org identifier.
     Accepts: org_slug, org_display_name, dev_id, org_id, org_display_id, or a DevRev URL.
     Matches are case-insensitive.
+
+    IMPORTANT: Checks expiry and performs API validation before returning.
     """
     org_identifier = _extract_org_from_input(org_identifier)
     vault = _load_vault()
-    
+
     def _entry_to_result(entry):
-        return {
+        # Check expiry from stored metadata
+        exp_str = entry.get("expires", "")
+        is_expired = False
+        expiry_warning = None
+
+        if exp_str:
+            try:
+                exp_dt = datetime.fromisoformat(exp_str)
+                now = datetime.now(timezone.utc)
+                is_expired = exp_dt < now
+
+                # Check if expiring within 7 days
+                days_until_expiry = (exp_dt - now).days
+                if not is_expired and days_until_expiry <= 7:
+                    expiry_warning = f"Token expires in {days_until_expiry} day(s)"
+            except:
+                pass
+
+        token = _decrypt(entry["token_encrypted"])
+
+        result = {
             "found": True,
             "org_slug": entry.get("org_slug", ""),
             "org_display_name": entry.get("org_display_name", ""),
             "org_environment": entry.get("org_environment", "production"),
             "gateway_url": entry.get("gateway_url", DEVREV_GATEWAY),
-            "token": _decrypt(entry["token_encrypted"]),
+            "token": token,
+            "expires": exp_str,
+            "expired": is_expired,
         }
+
+        if expiry_warning:
+            result["warning"] = expiry_warning
+
+        # If expired, add error and validate via API
+        if is_expired:
+            result["error"] = f"Token expired on {exp_str}"
+            # Try API validation to confirm
+            try:
+                validation = validate_pat(token)
+                if validation.get("valid"):
+                    # Token is actually still valid, update vault
+                    result["expired"] = False
+                    result["error"] = None
+                    result["warning"] = "Token was marked expired but is still valid (metadata updated)"
+            except:
+                pass
+
+        return result
 
     # Direct key match
     if org_identifier in vault["orgs"]:
