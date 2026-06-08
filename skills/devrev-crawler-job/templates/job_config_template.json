@@ -1,0 +1,12 @@
+{
+  "urls": [
+    "https://docs.example.com/",
+    "https://help.example.com/"
+  ],
+  "applies_to_parts": [
+    "don:core:dvrv-us-1:devo/ORG:product/1"
+  ],
+  "frequency": 0,
+  "max_depth": 4,
+  "description": "Example crawler job configuration"
+}

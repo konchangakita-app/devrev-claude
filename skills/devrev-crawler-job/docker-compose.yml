@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  crawler:
+    build: .
+    container_name: devrev-crawler-job
+    environment:
+      - DEVREV_PAT=${DEVREV_PAT}
+      - DEVREV_GATEWAY_URL=${DEVREV_GATEWAY_URL:-https://app.devrev.ai/api/gateway/internal}
+    volumes:
+      - ./scripts:/app/scripts
+      - ./references:/app/references
+      - ./templates:/app/templates
+    stdin_open: true
+    tty: true
