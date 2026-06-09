@@ -1,6 +1,6 @@
 # devrev-claude
 
-DevRev platform向けのClaude Code スキル集
+DevRev platform向けのClaude Code スキル集（konchangakita-app organization）
 
 ## 概要
 
@@ -46,7 +46,7 @@ devrev-claude/
 
 ```bash
 # リポジトリのクローン
-git clone https://github.com/konchangakita/devrev-claude.git
+git clone https://github.com/konchangakita-app/devrev-claude.git
 cd devrev-claude
 
 # 依存関係のインストール
